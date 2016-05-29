@@ -17,13 +17,20 @@ while [ $var ]; do
 			
 	fi
 
-	cat "$directory/Image_path.txt" | while read eachfile
+	cat "$directory/Image_path.txt" | while read eachfile				### read from each line in the Image_path.txt and use identify to list the detail of each image
 	do
-		basename $eachfile
-		# name = $(basename "$eachfile")
+		# basename $eachfile
+		filename=$(basename "$eachfile")
+		filetype=$(identify "$eachfile" | awk -F" " '{print "\t" $2}')
+		filesize=$(identify "$eachfile" | awk -F" " '{print "\t" $7}')
+		echo "Filename: $filename"
+		echo "Directory: $directory"
+		echo "Type: $filetype"
+		echo "Size: $filesize"
+		echo "   "
 	  	
-	done #> allImage.txt
-	# echo "Successfull! all image information is saved in file allImage.txt"
+	done > Image_details.txt
+	echo "Successfull! all image information is saved in file Image_details.txt"
 
 	echo "Do you want to continue? Enter yes or no."
 	read answer
