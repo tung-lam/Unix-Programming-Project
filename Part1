@@ -1,0 +1,39 @@
+#!/bin/bash
+
+var=true
+
+while [ $var ]; do
+	echo "Enter the name of the directory you want to list all image:"
+	read directory									###/home/linhtynny/Documents/Project/Unix-Programming-Project/Test
+
+	if [ ! -d $directory ] ; 						###check if folder exists
+		then 
+			echo "Directory $directory not found!" 
+		else										###list all the image's path to Image_path.txt
+			cd $directory
+			# ls
+			# find . -type f -exec file {} \; | grep -o -P '^.+: \w+ image' > Image_path.txt	##the image's path is not full
+			find "$directory" -type f -exec file {} \; -print | awk -F: '{ if ($2 ~/image/) print $1 }' > Image_path.txt
+			
+	fi
+
+	cat "$directory/Image_path.txt" | while read eachfile
+	do
+		basename $eachfile
+		# name = $(basename "$eachfile")
+	  	
+	done #> allImage.txt
+	# echo "Successfull! all image information is saved in file allImage.txt"
+
+	echo "Do you want to continue? Enter yes or no."
+	read answer
+
+	case "$answer" in
+		yes | y | Yes | YES ) : ;;
+		n* | N* | *)
+			echo " **** Exit! ****"	
+			exit 
+			;;
+	esac
+done
+exit 0
