@@ -1,0 +1,13 @@
+﻿Unix Project command explanation
+
+1. List all the images files from a folder (including sub-folders):
+find . -type f -exec file {} \; | grep -o -P '^.+: \w+ image'
+
+See: http://stackoverflow.com/questions/24246692/find-and-copy-all-images-in-directory-using-terminal-linux-mint-trying-to-under
+
+-exec command ;
+              Execute command; true if 0 status is returned.  All following arguments to find are taken to be arguments to  the  command  until  an argument consisting of `;' is encountered.  The string `{}' is replaced by the current file name being processed everywhere it occurs in the arguments to the command, not just in arguments where it is alone, as in some versions of find.  Both of  these  constructions might  need  to be escaped (with a `\') or quoted to protect them from expansion by the shell.  See the EXAMPLES section for examples of the use of the -exec option.  The specified command is run once for each matched file.  The command is executed  in  the  starting          directory.   There are unavoidable security problems surrounding use of the -exec action; you should use the -execdir option instead. (Source: man find)
+
+find . -type f -exec file '{}' \;
+
+       Runs `file' on every file in or below the current directory.  Notice that the braces are enclosed in single quote marks to protect them from interpretation as shell script punctuation. The semicolon is similarly protected by the use of a backslash, though single quotes could have been used in that case also. (Source: man find, example)
