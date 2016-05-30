@@ -1,6 +1,7 @@
 #!/bin/bash
 
-var=true	
+cont=true	
+path="Image_path.txt"
 
 get_created_time() {
    for file in "${@}"; do
@@ -12,22 +13,12 @@ get_created_time() {
        printf "%s\t%s\n" "${file}" "${createdtime}"				
 }
 
-while [ $var ]; do
-	echo "Enter the name of the directory you want to list all image:"
-	read directory									###/home/linhtynny/Documents/Project/Unix-Programming-Project/Test
+list_image(){
 
-	if [ ! -d $directory ] ; 						###check if folder exists
-		then 
-			echo "Directory $directory not found!" 
-		else										###list all the image's path to Image_path.txt
-			cd $directory
-			# ls
-			# find . -type f -exec file {} \; | grep -o -P '^.+: \w+ image' > Image_path.txt	##the image's path is not full
-			find "$directory" -type f -exec file {} \; -print | awk -F: '{ if ($2 ~/image/) print $1 }' > Image_path.txt
-													###find the file (type) with the format:image in directory  and print the path to the file Image_path.txt
-	fi
+	echo "Which file do you want to print the result? Enter the filename."
+	read listfile
 
-	cat "$directory/Image_path.txt" | while read eachfile				### read from each line in the Image_path.txt and use identify to list the detail of each image
+	cat "$directory/$*" | while read eachfile				### read from each line in the Image_path.txt and use identify to list the detail of each image
 	do
 		# basename $eachfile
 		filename=$(basename "$eachfile")
@@ -41,9 +32,78 @@ while [ $var ]; do
 		echo "Size: $filesize"
 		echo "Created time: $filecreatedtime"
 		echo "   "
-	  	
-	done > Image_details.txt
-	echo "All image information is saved in file Image_details.txt"
+	done > "$listfile"
+	echo "All image information is saved in file $listfile in directory $directory"
+}
+### FINISH PART 1.1
+
+	# echo "Which feature do you want to sort? Enter a number."
+sort_image(){
+	echo "1. Sort by name"
+	echo "2. Sort by size"
+	echo "3. Sort by created time"
+	read choice
+
+	case "$choice" in 
+		1 )
+			sort_name_path="Sort_by_name_path.txt"
+			find "$directory" -type f -exec file {} \; -print | awk -F: '{ if ($2 ~/image/) print $1 }' |sort > "$sort_name_path"
+	  		list_image "$sort_name_path"
+	  		;;
+	  	2 )
+			sort_size_path="Sort_by_size_path.txt"
+			find "$directory" -type f -exec file {} \; -print | awk -F: '{ if ($2 ~/image/) print $1 }'  | xargs du -h | sort -h  > Draft.txt
+	  																			### xarg: from standard input, du: estimate file space usage, -h:human readable
+			cat "$directory/Draft.txt" | while read eachfile				
+			do
+				onlypath=$(echo "$eachfile" | awk -F" " '{print "\t" $2}')
+				echo $onlypath
+			done > $sort_size_path
+	  		list_image "$sort_size_path"
+	  		;;
+	  	3 )
+			sort_created_path="Sort_by_created_date_path.txt"
+			cat "$directory/$*" | while read eachfile				
+			do
+		 		echo "$(get_created_time "$eachfile")" 
+			done > created_date_path.txt
+ 			echo "-------------------------------"
+			sort -k3 -k4 created_date_path.txt > Draft.txt		### -k:sort via a key
+			cat "$directory/Draft.txt" | while read eachfile				
+			do
+				onlypath=$(echo "$eachfile" | awk -F" " '{print "\t" $1}')
+				echo $onlypath
+			done > $sort_created_path
+			list_image "$sort_created_path"
+	  		;;
+	  	* )
+			echo "Invalid choice!"
+			# break
+			;;
+		esac
+}
+### FINISH PART 1.2
+
+
+while [ $cont ]; do
+
+	echo "Enter the name of the directory you want to work with:"
+	read directory									###/home/linhtynny/Documents/Project/Unix-Programming-Project/Test
+
+	if [ ! -d $directory ] ; 						###check if folder exists
+		then 
+			echo "Directory $directory not found!" 
+		else										###list all the image's path to Image_path.txt
+			cd $directory
+			# ls
+			# find . -type f -exec file {} \; | grep -o -P '^.+: \w+ image' > Image_path.txt	##the image's path is not full
+			find "$directory" -type f -exec file {} \; -print | awk -F: '{ if ($2 ~/image/) print $1 }' > $path
+													###find the file (type) with the format:image in directory  and print the path to the file path
+	fi
+
+	
+	# list_image "$path"
+	sort_image "$path"
 
 	echo "Do you want to continue? Enter yes or no."
 	read answer
@@ -58,6 +118,3 @@ while [ $var ]; do
 done
 exit 0
 
-# sudo debugfs -R "/home/linhtynny/Documents/Project/Unix-Programming-Project/Test/Image_path.txt" /dev/sdxX | grep crtime
-# stat --print='%w' /home/linhtynny/Documents/Project/Unix-Programming-Project/Test/Image_path.txt
-# debugfs -R 'stat /home/linhtynny/Documents/Project/Unix-Programming-Project/Test/Image_path.txt' /dev/sda1
