@@ -1,6 +1,16 @@
 #!/bin/bash
 
-var=true
+var=true	
+
+get_created_time() {
+   for file in "${@}"; do
+       inode=$(stat -c %i "${file}") 							### dis play file status to get inode
+       filesystem=$(df "${file}"  | tail -1 | awk '{print $1}') ### output the $1 of the last line from the report file system disk space usage
+       createdtime=$(sudo debugfs -R 'stat <'"${inode}"'>' "${filesystem}" 2>/dev/null | grep -oP 'crtime.*--\s*\K.*')
+       															### request the file system debugger to get createdtime of the inode through the filesystem
+   done
+       printf "%s\t%s\n" "${file}" "${createdtime}"				
+}
 
 while [ $var ]; do
 	echo "Enter the name of the directory you want to list all image:"
@@ -14,7 +24,7 @@ while [ $var ]; do
 			# ls
 			# find . -type f -exec file {} \; | grep -o -P '^.+: \w+ image' > Image_path.txt	##the image's path is not full
 			find "$directory" -type f -exec file {} \; -print | awk -F: '{ if ($2 ~/image/) print $1 }' > Image_path.txt
-			
+													###find the file (type) with the format:image in directory  and print the path to the file Image_path.txt
 	fi
 
 	cat "$directory/Image_path.txt" | while read eachfile				### read from each line in the Image_path.txt and use identify to list the detail of each image
@@ -23,14 +33,17 @@ while [ $var ]; do
 		filename=$(basename "$eachfile")
 		filetype=$(identify "$eachfile" | awk -F" " '{print "\t" $2}')
 		filesize=$(identify "$eachfile" | awk -F" " '{print "\t" $7}')
+		filecreatedtime=$(get_created_time "$eachfile" | awk -F" " '{print "\t" $2" "$3" "$4" "$5" "$6}')
+
 		echo "Filename: $filename"
 		echo "Directory: $directory"
 		echo "Type: $filetype"
 		echo "Size: $filesize"
+		echo "Created time: $filecreatedtime"
 		echo "   "
 	  	
 	done > Image_details.txt
-	echo "Successfull! all image information is saved in file Image_details.txt"
+	echo "All image information is saved in file Image_details.txt"
 
 	echo "Do you want to continue? Enter yes or no."
 	read answer
@@ -44,3 +57,7 @@ while [ $var ]; do
 	esac
 done
 exit 0
+
+# sudo debugfs -R "/home/linhtynny/Documents/Project/Unix-Programming-Project/Test/Image_path.txt" /dev/sdxX | grep crtime
+# stat --print='%w' /home/linhtynny/Documents/Project/Unix-Programming-Project/Test/Image_path.txt
+# debugfs -R 'stat /home/linhtynny/Documents/Project/Unix-Programming-Project/Test/Image_path.txt' /dev/sda1
