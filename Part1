@@ -16,7 +16,7 @@ get_created_time() {
 
 list_image(){
 
-	echo "Which file do you want to list all the images? Enter the filename."
+	echo "Which file do you want to print the results? Enter the filename."
 	read listfile
 
 	cat "$directory/$*" | while read eachfile				### read from each line in the Image_path.txt and use identify to list the detail of each image
@@ -46,8 +46,9 @@ list_image(){
 }
 ### FINISH PART 1.1
 
-	echo "Which feature do you want to sort? Enter a number."
+	
 sort_image(){
+	echo "Which feature do you want to sort? Enter a number."
 	echo "1. Sort by name"
 	echo "2. Sort by size"
 	echo "3. Sort by created time"
@@ -117,13 +118,14 @@ search_image_by_keyword(){
 
 	grep -A 0 -i "$keyword" All_image.txt > $result
 }
+### FINISH PART 1.5
 
 ### END FUNCITONS
 
 
 ### MAIN
-	echo "Enter the name of the directory you want to work with:"
-	read directory									###/home/linhtynny/Documents/Project/Unix-Programming-Project/Test
+echo "Enter the name of the directory you want to work with:"
+read directory									###/home/linhtynny/Documents/Project/Unix-Programming-Project/Test
 
 while [ $cont ]; do
 	if [ ! -d $directory ] ; 						###check if folder exists
@@ -137,11 +139,21 @@ while [ $cont ]; do
 													###find the file (type) with the format:image in directory  and print the path to the file path
 	fi
 
-	
 	# list_image "$path"
 	# sort_image "$path"
-	search_image_by_keyword
-	
+	# search_image_by_keyword
+
+	echo "What do you want to do? Choose an option:"
+	echo "1. List all the images files with details"
+	echo "2. Sort the files by different features"
+	echo "5. Search image files by keyword"
+	read option
+	case "$option" in 
+		1 ) list_image "$path" ;;
+		2 ) sort_image "$path" ;;
+		5 ) search_image_by_keyword ;;
+		* ) echo "Invalid option! " ;;
+	esac
 	echo " "
 	echo "Do you want to continue? Enter yes or no."
 	read answer
