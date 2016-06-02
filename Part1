@@ -3,6 +3,7 @@
 cont=true	
 path="Image_path.txt"
 
+### START FUNCTIONS
 get_created_time() {
    for file in "${@}"; do
        inode=$(stat -c %i "${file}") 							### dis play file status to get inode
@@ -10,12 +11,12 @@ get_created_time() {
        createdtime=$(sudo debugfs -R 'stat <'"${inode}"'>' "${filesystem}" 2>/dev/null | grep -oP 'crtime.*--\s*\K.*')
        															### request the file system debugger to get createdtime of the inode through the filesystem
    done
-       printf "%s\t%s\n" "${file}" "${createdtime}"				
+       printf "%s %s\n" "${file}" "${createdtime}"				
 }
 
 list_image(){
 
-	echo "Which file do you want to print the result? Enter the filename."
+	echo "Which file do you want to list all the images? Enter the filename."
 	read listfile
 
 	cat "$directory/$*" | while read eachfile				### read from each line in the Image_path.txt and use identify to list the detail of each image
@@ -26,18 +27,26 @@ list_image(){
 		filesize=$(identify "$eachfile" | awk -F" " '{print "\t" $7}')
 		filecreatedtime=$(get_created_time "$eachfile" | awk -F" " '{print "\t" $2" "$3" "$4" "$5" "$6}')
 
-		echo "Filename: $filename"
-		echo "Directory: $directory"
-		echo "Type: $filetype"
-		echo "Size: $filesize"
-		echo "Created time: $filecreatedtime"
-		echo "   "
+		# echo "Filename: $filename"
+		# echo "Directory: $eachfile"
+		# echo "Type: $filetype"
+		# echo "Size: $filesize"
+		# echo "Created time: $filecreatedtime"
+		# echo " "
+ 
+		echo "$filename |$eachfile |$filetype |$filesize |$filecreatedtime"
+		echo " "
+
 	done > "$listfile"
-	echo "All image information is saved in file $listfile in directory $directory"
+
+	echo " "
+	echo "All image information is saved in file $listfile in directory $directory with the order:"
+	echo "Filename | Directory | Type | Size | Created time" 
+	# echo " "
 }
 ### FINISH PART 1.1
 
-	# echo "Which feature do you want to sort? Enter a number."
+	echo "Which feature do you want to sort? Enter a number."
 sort_image(){
 	echo "1. Sort by name"
 	echo "2. Sort by size"
@@ -52,9 +61,9 @@ sort_image(){
 	  		;;
 	  	2 )
 			sort_size_path="Sort_by_size_path.txt"
-			find "$directory" -type f -exec file {} \; -print | awk -F: '{ if ($2 ~/image/) print $1 }'  | xargs du -h | sort -h  > Draft.txt
+			find "$directory" -type f -exec file {} \; -print | awk -F: '{ if ($2 ~/image/) print $1 }'  | xargs du -h | sort -h  > Short-size.txt
 	  																			### xarg: from standard input, du: estimate file space usage, -h:human readable
-			cat "$directory/Draft.txt" | while read eachfile				
+			cat "$directory/Short-size.txt" | while read eachfile				
 			do
 				onlypath=$(echo "$eachfile" | awk -F" " '{print "\t" $2}')
 				echo $onlypath
@@ -68,8 +77,8 @@ sort_image(){
 		 		echo "$(get_created_time "$eachfile")" 
 			done > created_date_path.txt
  			echo "-------------------------------"
-			sort -k3 -k4 created_date_path.txt > Draft.txt		### -k:sort via a key
-			cat "$directory/Draft.txt" | while read eachfile				
+			sort -k3 -k4 created_date_path.txt > Short-created.txt		### -k:sort via a key
+			cat "$directory/Short-created.txt" | while read eachfile				
 			do
 				onlypath=$(echo "$eachfile" | awk -F" " '{print "\t" $1}')
 				echo $onlypath
@@ -84,12 +93,39 @@ sort_image(){
 }
 ### FINISH PART 1.2
 
+search_image_by_keyword(){
 
-while [ $cont ]; do
+	# list_image "$path"
+	cat "$directory/Image_path.txt" | while read eachfile				### read from each line in the Image_path.txt and use identify to list the detail of each image
+	do
+		filename=$(basename "$eachfile")
+		filetype=$(identify "$eachfile" | awk -F" " '{print "\t" $2}')
+		filesize=$(identify "$eachfile" | awk -F" " '{print "\t" $7}')
+		filecreatedtime=$(get_created_time "$eachfile" | awk -F" " '{print "\t" $2" "$3" "$4" "$5" "$6}')
+ 
+		echo "$filename |$eachfile |$filetype |$filesize |$filecreatedtime"
+		echo " "
 
+	done > "All_image.txt"
+
+	echo " "
+	echo "Enter a keyword: "
+	read keyword
+	
+	echo "Which file do you want to print the results? Enter the filename."
+	read result
+
+	grep -A 0 -i "$keyword" All_image.txt > $result
+}
+
+### END FUNCITONS
+
+
+### MAIN
 	echo "Enter the name of the directory you want to work with:"
 	read directory									###/home/linhtynny/Documents/Project/Unix-Programming-Project/Test
 
+while [ $cont ]; do
 	if [ ! -d $directory ] ; 						###check if folder exists
 		then 
 			echo "Directory $directory not found!" 
@@ -103,8 +139,10 @@ while [ $cont ]; do
 
 	
 	# list_image "$path"
-	sort_image "$path"
-
+	# sort_image "$path"
+	search_image_by_keyword
+	
+	echo " "
 	echo "Do you want to continue? Enter yes or no."
 	read answer
 
