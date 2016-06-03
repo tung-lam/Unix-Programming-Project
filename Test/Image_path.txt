@@ -9,6 +9,8 @@
 /home/linhtynny/Documents/Project/Unix-Programming-Project/Test/error21.5.png
 /home/linhtynny/Documents/Project/Unix-Programming-Project/Test/hw_error4.png
 /home/linhtynny/Documents/Project/Unix-Programming-Project/Test/Test2/ACA1.png
+/home/linhtynny/Documents/Project/Unix-Programming-Project/Test/Test2/Test3/ACA1.png
+/home/linhtynny/Documents/Project/Unix-Programming-Project/Test/Test2/Test3/ACA3png
 /home/linhtynny/Documents/Project/Unix-Programming-Project/Test/Test2/hw_error2.png
 /home/linhtynny/Documents/Project/Unix-Programming-Project/Test/Test2/monkey.jpg
 /home/linhtynny/Documents/Project/Unix-Programming-Project/Test/hw_error3.png

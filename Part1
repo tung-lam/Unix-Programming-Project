@@ -2,6 +2,8 @@
 
 cont=true	
 path="Image_path.txt"
+txtrst=$(tput sgr0) # Text reset
+txtred=$(tput setaf 1) # Red
 
 ### START FUNCTIONS
 get_created_time() {
@@ -18,7 +20,7 @@ list_image(){
 
 	echo "Which file do you want to print the results? Enter the filename."
 	read listfile
-
+	
 	cat "$directory/$*" | while read eachfile				### read from each line in the Image_path.txt and use identify to list the detail of each image
 	do
 		# basename $eachfile
@@ -94,10 +96,33 @@ sort_image(){
 }
 ### FINISH PART 1.2
 
+
+files_same_name(){
+	# echo “This is ${txtred} high light text ${txtrst}!” 
+
+find "$directory" -type f -exec file {} \; -print | awk -F: '{ if ($2 ~/image/) print $1 }' > $path
+> same_name.txt
+cat "$directory/$path" | while read eachfile	
+do
+    filename="$( basename "$eachfile" )"
+    compared_name="$( grep "$filename" $path | grep -v "$eachfile" )"
+    if [ "$compared_name" != "" ]
+    	then
+    	if !(grep -q "^${eachfile}" same_name.txt ); then
+            echo -e "$eachfile"
+            echo -e "$compared_name"
+            echo " "
+        fi
+    fi
+done > same_name.txt
+# cat same_name.txt
+}
+
+
 search_image_by_keyword(){
 
 	# list_image "$path"
-	cat "$directory/Image_path.txt" | while read eachfile				### read from each line in the Image_path.txt and use identify to list the detail of each image
+	cat "$directory/$path" | while read eachfile				### read from each line in the Image_path.txt and use identify to list the detail of each image
 	do
 		filename=$(basename "$eachfile")
 		filetype=$(identify "$eachfile" | awk -F" " '{print "\t" $2}')
@@ -141,19 +166,23 @@ while [ $cont ]; do
 
 	# list_image "$path"
 	# sort_image "$path"
+	files_same_name
 	# search_image_by_keyword
+	
 
-	echo "What do you want to do? Choose an option:"
-	echo "1. List all the images files with details"
-	echo "2. Sort the files by different features"
-	echo "5. Search image files by keyword"
-	read option
-	case "$option" in 
-		1 ) list_image "$path" ;;
-		2 ) sort_image "$path" ;;
-		5 ) search_image_by_keyword ;;
-		* ) echo "Invalid option! " ;;
-	esac
+	# echo "What do you want to do? Choose an option:"
+	# echo "1. List all the images files with details"
+	# echo "2. Sort the files by different features"
+	# echo "5. Search image files by keyword"
+	# read option
+	# case "$option" in 
+	# 	1 ) list_image "$path" ;;
+	# 	2 ) sort_image "$path" ;;
+	# 	5 ) search_image_by_keyword ;;
+	# 	* ) echo "Invalid option! " ;;
+	# esac
+
+	
 	echo " "
 	echo "Do you want to continue? Enter yes or no."
 	read answer
