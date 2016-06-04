@@ -98,7 +98,7 @@ sort_image(){
 
 
 files_same_name(){
-	# echo “This is ${txtred} high light text ${txtrst}!” 
+	echo “This is ${txtred} high light text ${txtrst}!” 
 
 find "$directory" -type f -exec file {} \; -print | awk -F: '{ if ($2 ~/image/) print $1 }' > $path
 > same_name.txt
@@ -166,21 +166,21 @@ while [ $cont ]; do
 
 	# list_image "$path"
 	# sort_image "$path"
-	files_same_name
+	# files_same_name
 	# search_image_by_keyword
 	
 
-	# echo "What do you want to do? Choose an option:"
-	# echo "1. List all the images files with details"
-	# echo "2. Sort the files by different features"
-	# echo "5. Search image files by keyword"
-	# read option
-	# case "$option" in 
-	# 	1 ) list_image "$path" ;;
-	# 	2 ) sort_image "$path" ;;
-	# 	5 ) search_image_by_keyword ;;
-	# 	* ) echo "Invalid option! " ;;
-	# esac
+	echo "What do you want to do? Choose an option:"
+	echo "1. List all the images files with details"
+	echo "2. Sort the files by different features"
+	echo "5. Search image files by keyword"
+	read option
+	case "$option" in 
+		1 ) list_image "$path" ;;
+		2 ) sort_image "$path" ;;
+		5 ) search_image_by_keyword ;;
+		* ) echo "Invalid option! " ;;
+	esac
 
 	
 	echo " "

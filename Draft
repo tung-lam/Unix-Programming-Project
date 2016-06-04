@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# cd /home/linhtynny/Documents/Project/Unix-Programming-Project/Test
+
+# find -type f > names.txt
+
+# while read name
+# do
+#     bn="$( basename "$name" )"
+#     name2="$( grep "$bn" names.txt | grep -v "$name" )"
+#     if [ "$name2" != "" ]
+#     then
+# 	echo "$name"
+# 	echo "$name2"
+#     fi
+# done < names.txt
+
+cd /home/linhtynny/Documents/Project/Unix-Programming-Project/Test
+# find -type f > names.txt
+# find -type f -exec file {} \; -print | awk -F: '{ if ($2 ~/image/) print $1 }' > names.txt
+> names.out
+
+TAB=`echo -ne "\t"`
+while read name
+do
+    bn="$( basename "$name" )"
+    name2="$( grep "$bn" names.txt | grep -v "$name" )"
+    if [ "$name2" != "" ]
+    then
+                        if !(grep -q "^${name}${TAB}" names.out); then
+                                size=`stat --format=%s "$name"`
+                                size2=`stat --format=%s "$name2"`
+                                echo -e "$name${TAB}$size" >> names.out
+                                echo -e "$name2${TAB}$size" >> names.out
+                                echo " "
+                        fi
+    fi
+done < names.txt
+
+cat names.out
+# rm -f names.txt
