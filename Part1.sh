@@ -44,7 +44,9 @@ list_image(){
 	echo " "
 	echo "All image information is saved in file $listfile in directory $directory with the order:"
 	echo "Filename | Directory | Type | Size | Created time" 
-	# echo " "
+	echo " "
+	cat $listfile
+	
 }
 ### FINISH PART 1.1
 
@@ -98,7 +100,6 @@ sort_image(){
 
 
 files_same_name(){
-	echo “This is ${txtred} high light text ${txtrst}!” 
 
 find "$directory" -type f -exec file {} \; -print | awk -F: '{ if ($2 ~/image/) print $1 }' > $path
 > same_name.txt
@@ -118,6 +119,10 @@ done > same_name.txt
 # cat same_name.txt
 }
 
+highlight(){
+
+	echo “This is ${txtred} high light text ${txtrst}!” 
+}
 
 search_image_by_keyword(){
 
@@ -142,6 +147,7 @@ search_image_by_keyword(){
 	read result
 
 	grep -A 0 -i "$keyword" All_image.txt > $result
+	cat $result
 }
 ### FINISH PART 1.5
 
