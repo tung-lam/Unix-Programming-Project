@@ -14,3 +14,4 @@ int main(){
 //g++ -std=c++11 Image.cpp 
 //chmod +x Image.cpp
 //./a.out
+// /home/linhtynny/Documents/Project/Unix-Programming-Project/Test

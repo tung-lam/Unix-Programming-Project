@@ -2,6 +2,7 @@
 
 cont=true	
 path="Image_path.txt"
+listfile="Results.txt"
 txtrst=$(tput sgr0) # Text reset
 txtred=$(tput setaf 1) # Red
 
@@ -18,8 +19,8 @@ get_created_time() {
 
 list_image(){
 
-	echo "Which file do you want to print the results? Enter the filename."
-	read listfile
+	# echo "Which file do you want to print the results? Enter the filename."
+	# read listfile
 	
 	cat "$directory/$*" | while read eachfile				### read from each line in the Image_path.txt and use identify to list the detail of each image
 	do
@@ -143,11 +144,11 @@ search_image_by_keyword(){
 	echo "Enter a keyword: "
 	read keyword
 	
-	echo "Which file do you want to print the results? Enter the filename."
-	read result
+	# echo "Which file do you want to print the results? Enter the filename."
+	# read result
 
-	grep -A 0 -i "$keyword" All_image.txt > $result
-	cat $result
+	grep -A 0 -i "$keyword" All_image.txt > $listfile
+	cat $listfile
 }
 ### FINISH PART 1.5
 
