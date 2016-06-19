@@ -1,0 +1,18 @@
+#!/bin/sh
+
+path="Image_path.txt"
+
+directory=$1									###/home/linhtynny/Documents/Project/Unix-Programming-Project/Test
+
+if [ ! -d $directory ] ; 						###check if folder exists
+	then 
+		echo "Directory $directory not found!" 
+	else										###list all the image's path to Image_path.txt
+		cd $directory
+		# ls
+		# find . -type f -exec file {} \; | grep -o -P '^.+: \w+ image' > Image_path.txt	##the image's path is not full
+		find "$directory" -type f -exec file {} \; -print | awk -F: '{ if ($2 ~/image/) print $1 }' > $path
+												###find the file (type) with the format:image in directory  and print the path to the file path
+fi
+
+cat $imagepath

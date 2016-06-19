@@ -35,6 +35,10 @@ public:
     QTextEdit *mainOutput;
     QLineEdit *keywordInput;
     QPushButton *listingButton;
+    QPushButton *searchButton;
+    QPushButton *sortByNameButton;
+    QPushButton *sortBySizeButton;
+    QPushButton *sortByDateButton;
     QMenuBar *menuBar;
     QMenu *menuImage;
     QToolBar *mainToolBar;
@@ -45,6 +49,7 @@ public:
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
         MainWindow->resize(757, 491);
+        MainWindow->setMaximumSize(QSize(757, 491));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         browseFolder = new QPushButton(centralWidget);
@@ -62,6 +67,18 @@ public:
         listingButton = new QPushButton(centralWidget);
         listingButton->setObjectName(QStringLiteral("listingButton"));
         listingButton->setGeometry(QRect(40, 90, 99, 27));
+        searchButton = new QPushButton(centralWidget);
+        searchButton->setObjectName(QStringLiteral("searchButton"));
+        searchButton->setGeometry(QRect(40, 390, 99, 27));
+        sortByNameButton = new QPushButton(centralWidget);
+        sortByNameButton->setObjectName(QStringLiteral("sortByNameButton"));
+        sortByNameButton->setGeometry(QRect(40, 190, 99, 27));
+        sortBySizeButton = new QPushButton(centralWidget);
+        sortBySizeButton->setObjectName(QStringLiteral("sortBySizeButton"));
+        sortBySizeButton->setGeometry(QRect(40, 240, 99, 27));
+        sortByDateButton = new QPushButton(centralWidget);
+        sortByDateButton->setObjectName(QStringLiteral("sortByDateButton"));
+        sortByDateButton->setGeometry(QRect(40, 290, 99, 27));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
@@ -87,8 +104,13 @@ public:
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0));
         browseFolder->setText(QApplication::translate("MainWindow", "Browse", 0));
+        folderPathInput->setText(QString());
         listingButton->setText(QApplication::translate("MainWindow", "Listing", 0));
-        menuImage->setTitle(QApplication::translate("MainWindow", " Image manager", 0));
+        searchButton->setText(QApplication::translate("MainWindow", "Search", 0));
+        sortByNameButton->setText(QApplication::translate("MainWindow", "Sort by name", 0));
+        sortBySizeButton->setText(QApplication::translate("MainWindow", "Sort by size", 0));
+        sortByDateButton->setText(QApplication::translate("MainWindow", "Sort by date", 0));
+        menuImage->setTitle(QApplication::translate("MainWindow", " Image managing tool", 0));
     } // retranslateUi
 
 };
