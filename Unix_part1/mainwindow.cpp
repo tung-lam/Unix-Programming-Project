@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QFileDialog>
-#include <QThread>
 #include <QProcess>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -92,4 +91,16 @@ void MainWindow::on_duplicateButton_clicked()
     process3.waitForFinished(-1);
 
     ui->mainOutput->setText(process3.readAllStandardOutput());
+}
+
+void MainWindow::on_viewButton_clicked()
+{
+    QString directory = ui->folderPathInput->text();
+    QString name = "ACA1.png"; // any image in directory, for testing
+
+    QProcess process4;
+    process4.start("./View", QStringList() << directory << name);
+    process4.waitForFinished(-1);
+
+    ui->mainOutput->setText(process4.readAllStandardOutput());
 }

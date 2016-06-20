@@ -1,18 +1,61 @@
 #!/bin/sh
 
 path="Image_path.txt"
+listfile="Results.txt"
 
 directory=$1									###/home/linhtynny/Documents/Project/Unix-Programming-Project/Test
+
+get_created_time() {
+   for file in "${@}"; do
+       inode=$(stat -c %i "${file}") 							### dis play file status to get inode
+       filesystem=$(df "${file}"  | tail -1 | awk '{print $1}') ### output the $1 of the last line from the report file system disk space usage
+       createdtime=$(sudo debugfs -R 'stat <'"${inode}"'>' "${filesystem}" 2>/dev/null | grep -oP 'crtime.*--\s*\K.*')
+       															### request the file system debugger to get createdtime of the inode through the filesystem
+   done
+       printf "%s %s\n" "${file}" "${createdtime}"				
+}
+
+list_image(){
+
+	# echo "Which file do you want to print the results? Enter the filename."
+	# read listfile
+	
+	cat "$directory/$*" | while read eachfile				### read from each line in the Image_path.txt and use identify to list the detail of each image
+	do
+		# basename $eachfile
+		filename=$(basename "$eachfile")
+		filetype=$(identify "$eachfile" | awk -F" " '{print "\t" $2}')
+		filesize=$(identify "$eachfile" | awk -F" " '{print "\t" $7}')
+		filecreatedtime=$(get_created_time "$eachfile" | awk -F" " '{print "\t" $2" "$3" "$4" "$5" "$6}')
+
+		# echo "Filename: $filename"
+		# echo "Directory: $eachfile"
+		# echo "Type: $filetype"
+		# echo "Size: $filesize"
+		# echo "Created time: $filecreatedtime"
+		# echo " "
+ 
+		echo "$filename |$eachfile |$filetype |$filesize |$filecreatedtime"
+		echo " "
+
+	done > "$listfile"
+
+	# echo " "
+	# echo "All image information is saved in file $listfile in directory $directory with the order:"
+	echo "Filename | Directory | Type | Size | Created time" 
+	echo " "
+	cat $listfile
+	
+}
 
 if [ ! -d $directory ] ; 						###check if folder exists
 	then 
 		echo "Directory $directory not found!" 
 	else										###list all the image's path to Image_path.txt
 		cd $directory
-		# ls
-		# find . -type f -exec file {} \; | grep -o -P '^.+: \w+ image' > Image_path.txt	##the image's path is not full
 		find "$directory" -type f -exec file {} \; -print | awk -F: '{ if ($2 ~/image/) print $1 }' > $path
 												###find the file (type) with the format:image in directory  and print the path to the file path
 fi
 
-cat $path
+# cat $path
+list_image "$path"

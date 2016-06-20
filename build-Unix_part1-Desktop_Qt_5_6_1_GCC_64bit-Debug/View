@@ -1,0 +1,18 @@
+
+#!/bin/sh
+
+directory=$1
+name=$2
+path="Image_path.txt"
+
+
+view_image(){
+	fileview="$directory/$name"
+	echo $fileview
+	display $fileview
+}
+
+# directory="/home/linhtynny/Unix-Programming-Project/Test"
+
+
+view_image "$name"

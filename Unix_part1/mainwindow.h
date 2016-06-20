@@ -30,6 +30,8 @@ private slots:
 
     void on_duplicateButton_clicked();
 
+    void on_viewButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 };
