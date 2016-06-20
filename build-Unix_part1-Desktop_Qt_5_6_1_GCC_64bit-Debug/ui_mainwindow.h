@@ -39,6 +39,7 @@ public:
     QPushButton *sortByNameButton;
     QPushButton *sortBySizeButton;
     QPushButton *sortByDateButton;
+    QPushButton *duplicateButton;
     QMenuBar *menuBar;
     QMenu *menuImage;
     QToolBar *mainToolBar;
@@ -79,6 +80,9 @@ public:
         sortByDateButton = new QPushButton(centralWidget);
         sortByDateButton->setObjectName(QStringLiteral("sortByDateButton"));
         sortByDateButton->setGeometry(QRect(40, 290, 99, 27));
+        duplicateButton = new QPushButton(centralWidget);
+        duplicateButton->setObjectName(QStringLiteral("duplicateButton"));
+        duplicateButton->setGeometry(QRect(40, 340, 99, 27));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
@@ -110,6 +114,7 @@ public:
         sortByNameButton->setText(QApplication::translate("MainWindow", "Sort by name", 0));
         sortBySizeButton->setText(QApplication::translate("MainWindow", "Sort by size", 0));
         sortByDateButton->setText(QApplication::translate("MainWindow", "Sort by date", 0));
+        duplicateButton->setText(QApplication::translate("MainWindow", "Duplicate", 0));
         menuImage->setTitle(QApplication::translate("MainWindow", " Image managing tool", 0));
     } // retranslateUi
 

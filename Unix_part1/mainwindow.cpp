@@ -29,10 +29,67 @@ void MainWindow::on_browseFolder_clicked()
 
 void MainWindow::on_listingButton_clicked()
 {
-    QString directory = ui->folderPathInput->displayText();
+    QString directory = ui->folderPathInput->text();
+
     QProcess process1;
-    process1.start("ls", QStringList() << directory);
+    process1.start("./Part1.1", QStringList() << directory);
     process1.waitForFinished(-1);
 
     ui->mainOutput->setText(process1.readAllStandardOutput());
+}
+
+void MainWindow::on_sortByNameButton_clicked()
+{
+    QString directory = ui->folderPathInput->text();
+
+    QProcess process2;
+    process2.start("./SortByName", QStringList() << directory);
+    process2.waitForFinished(-1);
+
+    ui->mainOutput->setText(process2.readAllStandardOutput());
+}
+
+void MainWindow::on_searchButton_clicked()
+{
+    QString directory = ui->folderPathInput->text();
+    QString keyword = ui->keywordInput->text();
+
+    QProcess process5;
+    process5.start("./SearchKeyword", QStringList() << directory << keyword);
+    process5.waitForFinished(-1);
+
+    ui->mainOutput->setText(process5.readAllStandardOutput());
+}
+
+void MainWindow::on_sortBySizeButton_clicked()
+{
+    QString directory = ui->folderPathInput->text();
+
+    QProcess process2;
+    process2.start("./SortBySize", QStringList() << directory);
+    process2.waitForFinished(-1);
+
+    ui->mainOutput->setText(process2.readAllStandardOutput());
+}
+
+void MainWindow::on_sortByDateButton_clicked()
+{
+    QString directory = ui->folderPathInput->text();
+
+    QProcess process2;
+    process2.start("./SortByDate", QStringList() << directory);
+    process2.waitForFinished(-1);
+
+    ui->mainOutput->setText(process2.readAllStandardOutput());
+}
+
+void MainWindow::on_duplicateButton_clicked()
+{
+    QString directory = ui->folderPathInput->text();
+
+    QProcess process3;
+    process3.start("./SameName", QStringList() << directory);
+    process3.waitForFinished(-1);
+
+    ui->mainOutput->setText(process3.readAllStandardOutput());
 }
