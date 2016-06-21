@@ -160,7 +160,7 @@ int main(int argc, char *argv[])
 	fdmax = sockfd;
 	while(1){
 		fflush(stdin);
-		printf("+");
+		printf(">");
 		fflush(stdout);
 		read_fds = master;
 		if(select(fdmax+1, &read_fds, NULL, NULL, NULL) == -1){

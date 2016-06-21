@@ -8,8 +8,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    ui->folderPathInput->setPlaceholderText("Enter folder to manage images");
-    ui->keywordInput->setPlaceholderText("Enter keyword for searching");
+    ui->folderPathInput->setPlaceholderText("Enter folder");
+    ui->keywordInput->setPlaceholderText("Enter keyword");
+    ui->fileNameToView->setPlaceholderText("Enter image name");
 }
 
 MainWindow::~MainWindow()
@@ -95,12 +96,20 @@ void MainWindow::on_duplicateButton_clicked()
 
 void MainWindow::on_viewButton_clicked()
 {
+//    QDialog *dialog = new QDialog();
+//    dialog->setWindowTitle("Choose image to view");
+//    QLineEdit *lineEdit = new QLineEdit();
+//    lineEdit->setWindowTitle("Enter image name to view:");
+//    lineEdit->show();
+//    QString name = lineEdit->text();
+//    dialog->show();
+
     QString directory = ui->folderPathInput->text();
-    QString name = "ACA1.png"; // any image in directory, for testing
+    QString name = ui->fileNameToView->text();
 
     QProcess process4;
     process4.start("./View", QStringList() << directory << name);
-    process4.waitForFinished(-1);
+    process4.waitForFinished(-1 );
 
-    ui->mainOutput->setText(process4.readAllStandardOutput());
+//    ui->mainOutput->setText(process4.readAllStandardOutput());
 }
